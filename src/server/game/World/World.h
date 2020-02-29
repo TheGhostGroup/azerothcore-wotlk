@@ -13,7 +13,6 @@
 
 #include "Common.h"
 #include "Timer.h"
-#include <ace/Singleton.h>
 #include <ace/Atomic_Op.h>
 #include "SharedDefines.h"
 #include "QueryResult.h"
@@ -169,6 +168,11 @@ enum WorldBoolConfigs
     CONFIG_CHECK_GOBJECT_LOS,
     CONFIG_CLOSE_IDLE_CONNECTIONS,
     CONFIG_LFG_LOCATION_ALL, // Player can join LFG anywhere
+    CONFIG_PRELOAD_ALL_NON_INSTANCED_MAP_GRIDS,
+    CONFIG_ALLOW_TWO_SIDE_INTERACTION_EMOTE,
+    CONFIG_ITEMDELETE_METHOD,
+    CONFIG_ITEMDELETE_VENDOR,
+    CONFIG_SET_ALL_CREATURES_WITH_WAYPOINT_MOVEMENT_ACTIVE,
     BOOL_CONFIG_VALUE_COUNT
 };
 
@@ -340,6 +344,10 @@ enum WorldIntConfigs
     CONFIG_SOCKET_TIMEOUTTIME_ACTIVE,
     CONFIG_INSTANT_TAXI,
     CONFIG_AFK_PREVENT_LOGOUT,
+    CONFIG_ICC_BUFF_HORDE,
+    CONFIG_ICC_BUFF_ALLIANCE,
+    CONFIG_ITEMDELETE_QUALITY,
+    CONFIG_ITEMDELETE_ITEM_LEVEL,
     INT_CONFIG_VALUE_COUNT
 };
 
@@ -555,10 +563,12 @@ struct PetitionData
 class World
 {
     public:
-        static uint32 m_worldLoopCounter;
-
         World();
         ~World();
+
+        static World* instance();
+
+        static uint32 m_worldLoopCounter;
 
         WorldSession* FindSession(uint32 id) const;
         WorldSession* FindOfflineSession(uint32 id) const;
@@ -889,7 +899,7 @@ class World
 
         std::string m_configFileList;
 };
-
-#define sWorld ACE_Singleton<World, ACE_Null_Mutex>::instance()
+ 
+#define sWorld World::instance()
 #endif
 /// @}
